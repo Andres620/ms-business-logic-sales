@@ -65,11 +65,3 @@ typings/
 
 # Emacs auto-save file
 \#*#
-
-# Exclude images
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
-*.svg
