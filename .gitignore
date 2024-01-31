@@ -67,7 +67,6 @@ typings/
 \#*#
 
 # Exclude images
-archivos/   # Agrega esta línea si las imágenes están en un directorio llamado 'images'
 *.png
 *.jpg
 *.jpeg
