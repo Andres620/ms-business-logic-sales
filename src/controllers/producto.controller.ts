@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,23 +8,24 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
+import {ConfiguracionSeguridad} from '../config/configuracion.seguridad';
 import {Producto} from '../models';
 import {ProductoRepository} from '../repositories';
 
 export class ProductoController {
   constructor(
     @repository(ProductoRepository)
-    public productoRepository : ProductoRepository,
+    public productoRepository: ProductoRepository,
   ) {}
 
   @post('/producto')
@@ -52,12 +54,17 @@ export class ProductoController {
     description: 'Producto model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Producto) where?: Where<Producto>,
-  ): Promise<Count> {
+  async count(@param.where(Producto) where?: Where<Producto>): Promise<Count> {
     return this.productoRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [
+      ConfiguracionSeguridad.menuProductoID,
+      ConfiguracionSeguridad.listarAccion,
+    ],
+  })
   @get('/producto')
   @response(200, {
     description: 'Array of Producto model instances',
@@ -106,7 +113,8 @@ export class ProductoController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Producto, {exclude: 'where'}) filter?: FilterExcludingWhere<Producto>
+    @param.filter(Producto, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Producto>,
   ): Promise<Producto> {
     return this.productoRepository.findById(id, filter);
   }
